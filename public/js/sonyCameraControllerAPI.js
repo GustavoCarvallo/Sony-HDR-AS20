@@ -6,6 +6,12 @@ var CRA_LIVEVIEW_MAX_RECEIVE_SIZE = 500000;
 var CRA_LIVEVIEW_COMMON_HEADER_SIZE = 8;
 var CRA_LIVEVIEW_PLAYLOAD_HEADER_SIZE = 128;
 
+/**
+* Creates a XMLHttpRequest that supports Cross-origin resource sharing.
+* @param {String} method - HTTP method (POST or GET).
+* @param {String} url - URL where the request must be send.
+* @returns {XMLHttpRequest} xhr - An XMLHttpRequest that supports CORS.
+*/
 function createCORSRequest(method, url) {
   if ("withCredentials" in xhr) {
 
@@ -29,7 +35,11 @@ function createCORSRequest(method, url) {
   return xhr;
 }
 
-function getLiveview(){
+/**
+* Shows the liveview in a image tag.
+* @param {String} imageTagId - The id of the image tag where the liveview will be shown.
+*/
+function getLiveview(imageTagId){
   var headerDecode = false;
   var offset = 0;
   var self = arguments.callee;
@@ -78,7 +88,7 @@ function getLiveview(){
 
                   var base64 = window.btoa(binary);
                   if (base64.length > 0 && base64[0] == "/") {
-                      document.getElementById("image").src = "data:image/jpeg;base64," + base64;
+                      document.getElementById(imageTagId).src = "data:image/jpeg;base64," + base64;
                       offset = CRA_LIVEVIEW_COMMON_HEADER_SIZE + CRA_LIVEVIEW_PLAYLOAD_HEADER_SIZE + offset + jpegSize + paddingSize;
                       headerDecode = false;
                       return;
@@ -95,21 +105,26 @@ function getLiveview(){
   xhr.send();
 }
 
-
-
-function abortLiveviewRequest() {
-  xhr.abort();
-}
-
+/**
+* Sends the command to the Sony Camera to start the liveview.
+*/
 function startLiveView() {
   executeMethod("startLiveview", []);
 }
 
+/**
+* Sends the command to the Sony Camera to stop the liveview, and abort the xhr request.
+*/
 function stopLiveView() {
-  abortLiveviewRequest();
+  xhr.abort();
   executeMethod("stopLiveview", []);
 }
 
+/**
+* Sends a command to the Sony Camera.
+* @param {String} method - A supported Sony API method.
+* @param {String} params - The necesary params for the method.
+*/
 function executeMethod(method, params){
   var id = 1;
   var version = "1.0";
