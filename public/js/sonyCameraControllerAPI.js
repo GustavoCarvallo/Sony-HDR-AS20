@@ -50,9 +50,8 @@ function getLiveview(imageTagId){
   xhr.onreadystatechange = function() {
       if (xhr.readyState == 3) {
           if(xhr.response.length >= CRA_LIVEVIEW_MAX_RECEIVE_SIZE) {
-              //console.log('finish');
               xhr.abort();
-              self();
+              self(imageTagId);
           }
 
           if(xhr.response.length >= (CRA_LIVEVIEW_COMMON_HEADER_SIZE + CRA_LIVEVIEW_PLAYLOAD_HEADER_SIZE+offset)) {
