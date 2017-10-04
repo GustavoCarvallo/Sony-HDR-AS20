@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Sony Camera API</title>
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="external/materialize/css/materialize.min.css">
+</head>
+<body>
+  <div class="row">
+    <div class="col m12 l12 center-align">
+      <h3>Sony Camera API</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col m6 l6 center-align">
+      <button type="button" class="btn-large waves-effect waves-light" onclick="startLiveView()">Start Liveview</button>
+    </div>
+    <div class="col m6 l6 center-align">
+        <button type="button" class="btn-large waves-effect waves-light" onclick="stopLiveView()">Stop Liveview</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col m12 l12 center-align">
+      <button type="button" class="btn-large waves-effect waves-light" onclick="getLiveview()">Show Liveview</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col m12 l12 center-align">
+      <img src="public/images/photo-camera.png" id="image"></img>
+    </div>
+  </div>
+
+  <!-- JavaScripts  -->
+
+  <!-- Compiled and minified jquery -->
+  <script src="external/jquery/jquery-3.2.1.min.js"></script>
+
+  <!-- Compiled and minified JavaScript -->
+  <script src="external/materialize/js/materialize.min.js"></script>
+
+  <!-- Test Sony Camera API Script -->
+	<script src="public/js/sonyCameraControllerAPI.js"></script>
+</body>
+</html>
