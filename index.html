@@ -6,29 +6,67 @@
   <!-- Compiled and minified CSS -->
   <link rel="stylesheet" href="external/materialize/css/materialize.min.css">
 </head>
-<body>
-  <div class="row">
-    <div class="col m12 l12 center-align">
-      <h3>Sony Camera API</h3>
+<body onload="startApp()">
+  <div>
+    <div class="row">
+      <div class="col m12 l12 center-align">
+        <h3>Sony Camera API</h3>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col m6 l6 center-align">
-      <button type="button" class="btn-large waves-effect waves-light" onclick="startLiveView()">Start Liveview</button>
+    <!-- <div class="row">
+      <div class="col m6 l6 center-align">
+        <button type="button" class="btn-large waves-effect waves-light" onclick="startLiveView()">Start Liveview</button>
+      </div>
+      <div class="col m6 l6 center-align">
+          <button type="button" class="btn-large waves-effect waves-light" onclick="stopLiveView()">Stop Liveview</button>
+      </div>
     </div>
-    <div class="col m6 l6 center-align">
-        <button type="button" class="btn-large waves-effect waves-light" onclick="stopLiveView()">Stop Liveview</button>
+    <div class="row">
+      <div class="col m12 l12 center-align">
+        <button type="button" class="btn-large waves-effect waves-light" onclick="getLiveview('image')">Show Liveview</button>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col m12 l12 center-align">
-      <button type="button" class="btn-large waves-effect waves-light" onclick="getLiveview('image')">Show Liveview</button>
+    <div class="row">
+      <div class="col m12 l12">
+        <button type="button" class="btn-large waves-effect waves-light" onclick="loadSupportedSonyAPIMethods()">getSupportedSonyAPIMethods</button>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col m12 l12 center-align">
-      <img src="public/images/photo-camera.png" id="image"></img>
+    <div class="row"> -->
+    <div class="row">
+      <div class="input-field col m4 l4 offset-m2 offset-l2">
+        <select id="supportedMethodsSelect">
+        </select>
+        <label>Select Method</label>
+      </div>
+      <div class="col m4 l4">
+        <button type="button"class="btn-large waves-effect waves-light" onclick="selectMethod()">Select</button>
+      </div>
     </div>
+
+    <div class="row" id="imageBlock">
+      <div class="col m12 l12 center-align">
+        <img src="public/images/photo-camera.png" id="image"></img>
+      </div>
+    </div>
+
+    <div class="row" id="responseTextBlock">
+      <div class="col m6 l6 offset-m2 offset-l2 card-panel">
+
+        <div class="row">
+          <div class="col m6 l6 offset-m2 offset-l2">
+            <h5>Response:</h5>
+          </div>
+        </div>
+
+        <div class="row" >
+          <div class="col m6 l6 offset-m2 offset-l2">
+            <p id="responseText"></p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
   </div>
 
   <!-- JavaScripts  -->
@@ -36,10 +74,14 @@
   <!-- Compiled and minified jquery -->
   <script src="external/jquery/jquery-3.2.1.min.js"></script>
 
-  <!-- Compiled and minified JavaScript -->
+  <!-- Compiled and minified materialize -->
   <script src="external/materialize/js/materialize.min.js"></script>
 
-  <!-- Test Sony Camera API Script -->
+  <!-- Sony Camera Controller API Script -->
 	<script src="public/js/sonyCameraControllerAPI.js"></script>
+
+  <!-- View Script -->
+	<script src="public/js/app.js"></script>
+
 </body>
 </html>

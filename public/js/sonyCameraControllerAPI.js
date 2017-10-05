@@ -1,5 +1,4 @@
 var xhr = new XMLHttpRequest();
-var liveviewUrl;
 
 //Liveview encoding useful vars.
 var CRA_LIVEVIEW_MAX_RECEIVE_SIZE = 500000;
@@ -10,7 +9,7 @@ var CRA_LIVEVIEW_PLAYLOAD_HEADER_SIZE = 128;
 * Creates a XMLHttpRequest that supports Cross-origin resource sharing.
 * @param {String} method - HTTP method (POST or GET).
 * @param {String} url - URL where the request must be send.
-* @returns {XMLHttpRequest} xhr - An XMLHttpRequest that supports CORS.
+* @returns {XMLHttpRequest} An XMLHttpRequest that supports CORS.
 */
 function createCORSRequest(method, url) {
   if ("withCredentials" in xhr) {
@@ -38,8 +37,9 @@ function createCORSRequest(method, url) {
 /**
 * Shows the liveview in a image tag.
 * @param {String} imageTagId - The id of the image tag where the liveview will be shown.
+* @param {String} liveviewUrl - The URL of the liveview, this is given when the liveview start.
 */
-function getLiveview(imageTagId){
+function getLiveview(imageTagId, liveviewUrl){
   var headerDecode = false;
   var offset = 0;
   var self = arguments.callee;
@@ -51,7 +51,7 @@ function getLiveview(imageTagId){
       if (xhr.readyState == 3) {
           if(xhr.response.length >= CRA_LIVEVIEW_MAX_RECEIVE_SIZE) {
               xhr.abort();
-              self(imageTagId);
+              self(imageTagId, liveviewUrl);
           }
 
           if(xhr.response.length >= (CRA_LIVEVIEW_COMMON_HEADER_SIZE + CRA_LIVEVIEW_PLAYLOAD_HEADER_SIZE+offset)) {
@@ -105,53 +105,50 @@ function getLiveview(imageTagId){
 }
 
 /**
-* Sends the command to the Sony Camera to start the liveview.
+* Abort the xhr request used for the live view.
 */
-function startLiveView() {
-  executeMethod("startLiveview", []);
-}
-
-/**
-* Sends the command to the Sony Camera to stop the liveview, and abort the xhr request.
-*/
-function stopLiveView() {
-  xhr.abort();
-  executeMethod("stopLiveview", []);
+function abortTheLiveView() {
+  xhr.abort()
 }
 
 /**
 * Sends a command to the Sony Camera.
 * @param {String} method - A supported Sony API method.
 * @param {String} params - The necesary params for the method.
+* @returns {Promise} The server response or an error.
 */
 function executeMethod(method, params){
-  var id = 1;
-  var version = "1.0";
-  var endPointUrl = "http://192.168.122.1:10000/sony/camera";
-  var message = JSON.stringify({
-    "method": method,
-    "params": params,
-    "id": 1,
-    "version": "1.0"
-  });
-  console.log(message);
-  console.log(endPointUrl);
+  return new Promise(function(resolve, reject){
+    var id = 1;
+    var version = "1.0";
+    var endPointUrl = "http://192.168.122.1:10000/sony/camera";
+    var message = JSON.stringify({
+      "method": method,
+      "params": params,
+      "id": 1,
+      "version": "1.0"
+    });
+    console.log(message);
+    console.log(endPointUrl);
 
-  var xhr2 = createCORSRequest('POST', endPointUrl);
-  if (!xhr2) {
-    throw new Error('CORS not supported');
-  }
+    var xhr2 = createCORSRequest('POST', endPointUrl);
+    if (!xhr2) {
+      throw new Error('CORS not supported');
+    };
 
-  xhr2.onreadystatechange = function() {
-    if (xhr2.readyState === 4 && xhr2.status === 200) {
-      console.log(xhr2.responseText);
-      var response = JSON.parse(xhr2.responseText);
-      if (method == "startLiveview") {
-        liveviewUrl = response.result;
+    xhr.timeout = 2000; // Two seconds have the camera to response.
+
+    xhr2.onreadystatechange = function() {
+      if (xhr2.readyState === 4 && xhr2.status === 200) {
+        var response = JSON.parse(xhr2.responseText);
+        resolve(response);
       }
-      console.log(response);
-    }
-  };
+    };
 
-  xhr2.send(message);
+    xhr.ontimeout = function () {
+      reject("Server has not responded.")
+    };
+
+    xhr2.send(message);
+  });
 }
