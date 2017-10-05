@@ -77,7 +77,8 @@ function selectMethod() {
     res.then(function(response) {
       document.getElementById('imageBlock').style.display = "none";
       document.getElementById('responseTextBlock').style.display = "block";
-      document.getElementById('responseText').innerHTML = JSON.stringify(response);
+      var truncatedResponse = breakTextIntoLines(JSON.stringify(response), 80);
+      document.getElementById('responseText').innerHTML = truncatedResponse;
     })
     .catch(function(reason) {
       Materialize.toast(reason, 3000, "red");
@@ -85,3 +86,25 @@ function selectMethod() {
     });
   }
 };
+
+/**
+* Break a large String into an String with line breaks tags.
+* @param {String} text - The text to break into lines.
+* @param {String} maxSizePerLine - Maximum of chars per line.
+* @returns {String} An String with line breaks tags (<br>).
+*/
+function breakTextIntoLines(text, maxSizePerLine) {
+  var truncetedText = "";
+  if (text.length < maxSizePerLine) {
+    return text;
+  }
+  else {
+    var index;
+    for (index = maxSizePerLine; index < text.length; index+=maxSizePerLine) {
+      var line = text.substring(index - maxSizePerLine, index);
+      truncetedText+= line + "<br>";
+    }
+    truncetedText+= text.substring(index - maxSizePerLine, text.length);
+  }
+  return truncetedText;
+}
