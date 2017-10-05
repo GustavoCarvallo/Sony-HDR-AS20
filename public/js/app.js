@@ -1,7 +1,10 @@
+var methodsParamsType;
+
 /**
-* Loads all the supported Sony API methods into the select list.
+* Loads all the supported Sony API methods into the select list. And load
+* all the methods params type.
 */
-function loadSupportedSonyAPIMethods() {
+function loadSupportedSonyAPIMethodsAndParams() {
   var res = executeMethod("getAvailableApiList",[]);
   res.then(function(response) {
     var supportedMethods = response.result[0];
@@ -16,12 +19,27 @@ function loadSupportedSonyAPIMethods() {
     $(document).ready(function() {
      $('select').material_select();
     });
+    loadMethodsParamsType();
   })
   .catch(function(reason) {
     Materialize.toast(reason, 3000, "red");
     console.log("Error, reason: " + reason);
   });
 };
+
+/**
+* Loads all the necessary params of the supported Sony API methods.
+*/
+function loadMethodsParamsType() {
+  var res = executeMethod("getMethodTypes", ["1.0"]);
+  res.then(function(response) {
+    methodsParamsType = response.results;
+  })
+  .catch(function(reason) {
+    Materialize.toast(reason, 3000, "red");
+    console.log("Error, reason: " + reason);
+  });
+}
 
 /**
 * Starts showing the live view in an image tag.
@@ -40,7 +58,7 @@ function startLiveView() {
 };
 
 /**
-* Stops showing the live view in an image tag.
+* Stops showing the live view in an image tag, and abort the liveview request.
 */
 function stopLiveView() {
   executeMethod("stopLiveview", []);
@@ -51,47 +69,118 @@ function stopLiveView() {
 * Loads all the necesary things to start the web app.
 */
 function startApp() {
-  //Refresh the select element.
+  //Initilize the select element.
   $(document).ready(function() {
    $('select').material_select();
   });
-  loadSupportedSonyAPIMethods();
+  loadSupportedSonyAPIMethodsAndParams();
 
-  //Hide the block where the image goes, and also hide the block where the response text goes.
+  //Hide the image block, the response text block and the method params block.
   document.getElementById('imageBlock').style.display = "none";
   document.getElementById('responseTextBlock').style.display = "none";
+  document.getElementById('methodParamsBlock').style.display = "none";
 }
 
 /**
-* Executes the selected Sony API method.
+* Executes the selected Sony API method with the corresponding parameters (if needed).
 */
-function selectMethod() {
+function sendMethod() {
   var method = document.getElementById('supportedMethodsSelect').value;
+
   if (method === "startLiveview") {
     document.getElementById('responseTextBlock').style.display = "none";
     document.getElementById('imageBlock').style.display = "block";
     startLiveView();
   }
   else {
-    var res = executeMethod(method, []);
-    res.then(function(response) {
-      document.getElementById('imageBlock').style.display = "none";
-      document.getElementById('responseTextBlock').style.display = "block";
-      var truncatedResponse = breakTextIntoLines(JSON.stringify(response), 80);
-      document.getElementById('responseText').innerHTML = truncatedResponse;
-    })
-    .catch(function(reason) {
-      Materialize.toast(reason, 3000, "red");
-      console.log("Error, reason: " + reason);
-    });
+    //Parameters needed.
+    if(document.getElementById("input0") != null){
+      var param = document.getElementById("input0").value;
+      var res = executeMethod(method, [param]);
+      res.then(function(response) {
+        document.getElementById('imageBlock').style.display = "none";
+        document.getElementById('responseTextBlock').style.display = "block";
+        var truncatedResponse = breakTextIntoLines(JSON.stringify(response), 90);
+        document.getElementById('responseText').innerHTML = truncatedResponse;
+      })
+      .catch(function(reason) {
+        Materialize.toast(reason, 3000, "red");
+        console.log("Error, reason: " + reason);
+      });
+    }
+    //No parameters needed.
+    else {
+      var res = executeMethod(method, []);
+      res.then(function(response) {
+        document.getElementById('imageBlock').style.display = "none";
+        document.getElementById('responseTextBlock').style.display = "block";
+        var truncatedResponse = breakTextIntoLines(JSON.stringify(response), 90);
+        document.getElementById('responseText').innerHTML = truncatedResponse;
+      })
+      .catch(function(reason) {
+        Materialize.toast(reason, 3000, "red");
+        console.log("Error, reason: " + reason);
+      });
+    }
   }
 };
 
 /**
-* Break a large String into an String with line breaks tags.
+* Loads (in the view) all the inputs for the parameters need by the selected method.
+*/
+function methodSelectChange() {
+  //When the method selected changes, hide the previous response text block.
+  document.getElementById('responseTextBlock').style.display = "none";
+
+  document.getElementById("methodParamsCardPanel").innerHTML = "";
+  var method = document.getElementById('supportedMethodsSelect').value;
+  var currentParams = "";
+
+  for (var i = 0; i < methodsParamsType.length; i++) {
+    if(methodsParamsType[i][0] === method){
+      currentParams = methodsParamsType[i][1];
+      break;
+    }
+  }
+
+  //If the method need some parameters.
+  if (currentParams.toString() != "") {
+    //Show the parameters section.
+    document.getElementById('methodParamsBlock').style.display = "block";
+
+    var innerHTML = "<div class=\"row\">"
+                  +     "<h5>Params:</h5>"
+                  + "</div>"
+
+    for (var i = 0; i < currentParams.length; i++) {
+        var input = "<div class=\"row\">"
+                  +    "<div class=\"input-field inline\">"
+                  +      "<input id=\"" + ("input" + i) + "\" type=\"text\">"
+                  +      "<label for=\"" + ("input" + i) + "\">"+ currentParams[i] + "</label>"
+                  +    "</div>"
+                  + "</div>";
+        innerHTML += input;
+    }
+
+    document.getElementById("methodParamsCardPanel").innerHTML = innerHTML;
+  }
+
+  //If the method does not need parameters.
+  else {
+    //Hide the parameters section.
+    document.getElementById('methodParamsBlock').style.display = "none";
+  }
+}
+
+/**
+* Break a large String into an String with line breaks tags. This is useful
+* when trying to display large string without spaces into a paragraph tag.
 * @param {String} text - The text to break into lines.
 * @param {String} maxSizePerLine - Maximum of chars per line.
 * @returns {String} An String with line breaks tags (<br>).
+* @example <caption>Example usage of breakTextIntoLines method.</caption>
+* //  returns "[["getMethodTypes","getAvailableApiList" <br> ,"setShootMode","getShootMode","getSuppo <br> rte"]]"
+* breakTextIntoLines("[["getMethodTypes","getAvailableApiList","setShootMode","getShootMode","getSupporte"]]", 40);
 */
 function breakTextIntoLines(text, maxSizePerLine) {
   var truncetedText = "";

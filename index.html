@@ -13,60 +13,39 @@
         <h3>Sony Camera API</h3>
       </div>
     </div>
-    <!-- <div class="row">
-      <div class="col m6 l6 center-align">
-        <button type="button" class="btn-large waves-effect waves-light" onclick="startLiveView()">Start Liveview</button>
-      </div>
-      <div class="col m6 l6 center-align">
-          <button type="button" class="btn-large waves-effect waves-light" onclick="stopLiveView()">Stop Liveview</button>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col m12 l12 center-align">
-        <button type="button" class="btn-large waves-effect waves-light" onclick="getLiveview('image')">Show Liveview</button>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col m12 l12">
-        <button type="button" class="btn-large waves-effect waves-light" onclick="loadSupportedSonyAPIMethods()">getSupportedSonyAPIMethods</button>
-      </div>
-    </div>
-    <div class="row"> -->
     <div class="row">
       <div class="input-field col m4 l4 offset-m2 offset-l2">
-        <select id="supportedMethodsSelect">
+        <select id="supportedMethodsSelect" onchange="methodSelectChange()">
         </select>
         <label>Select Method</label>
       </div>
       <div class="col m4 l4">
-        <button type="button"class="btn-large waves-effect waves-light" onclick="selectMethod()">Select</button>
+        <button type="button"class="btn-large waves-effect waves-light" onclick="sendMethod()">Send</button>
       </div>
     </div>
-
+    <div class="row" id="methodParamsBlock">
+      <div class="col m4 l4 offset-m2 offset-l2 card-panel" id="methodParamsCardPanel">
+      </div>
+    </div>
     <div class="row" id="imageBlock">
       <div class="col m12 l12 center-align">
         <img src="public/images/photo-camera.png" id="image"></img>
       </div>
     </div>
-
     <div class="row" id="responseTextBlock">
       <div class="col m6 l6 offset-m2 offset-l2 card-panel">
-
         <div class="row">
-          <div class="col m6 l6 offset-m1 offset-l1">
+          <div class="col m6 l6 ">
             <h5>Response:</h5>
           </div>
         </div>
-
         <div class="row" >
-          <div class="col m6 l6 offset-m1 offset-l1">
+          <div class="col m6 l6 ">
             <p id="responseText"></p>
           </div>
         </div>
-
       </div>
     </div>
-
   </div>
 
   <!-- JavaScripts  -->

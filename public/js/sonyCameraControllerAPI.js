@@ -128,9 +128,7 @@ function executeMethod(method, params){
       "id": 1,
       "version": "1.0"
     });
-    console.log(message);
-    console.log(endPointUrl);
-
+    
     var xhr2 = createCORSRequest('POST', endPointUrl);
     if (!xhr2) {
       throw new Error('CORS not supported');
