@@ -100,7 +100,7 @@ function sendMethod() {
       res.then(function(response) {
         document.getElementById('imageBlock').style.display = "none";
         document.getElementById('responseTextBlock').style.display = "block";
-        var truncatedResponse = breakTextIntoLines(JSON.stringify(response), 90);
+        var truncatedResponse = JSON.stringify(response, null, 5);
         document.getElementById('responseText').innerHTML = truncatedResponse;
       })
       .catch(function(reason) {
@@ -114,7 +114,7 @@ function sendMethod() {
       res.then(function(response) {
         document.getElementById('imageBlock').style.display = "none";
         document.getElementById('responseTextBlock').style.display = "block";
-        var truncatedResponse = breakTextIntoLines(JSON.stringify(response), 90);
+        var truncatedResponse = JSON.stringify(response, null, 5);
         document.getElementById('responseText').innerHTML = truncatedResponse;
       })
       .catch(function(reason) {
@@ -170,30 +170,4 @@ function methodSelectChange() {
     //Hide the parameters section.
     document.getElementById('methodParamsBlock').style.display = "none";
   }
-}
-
-/**
-* Break a large String into an String with line breaks tags. This is useful
-* when trying to display large string without spaces into a paragraph tag.
-* @param {String} text - The text to break into lines.
-* @param {String} maxSizePerLine - Maximum of chars per line.
-* @returns {String} An String with line breaks tags (br tag).
-* @example <caption>Example usage of breakTextIntoLines method.</caption>
-* //  returns "[["getMethodTypes","getAvailableApiList" <br> ,"setShootMode","getShootMode","getSuppo <br> rte"]]"
-* breakTextIntoLines("[["getMethodTypes","getAvailableApiList","setShootMode","getShootMode","getSupporte"]]", 40);
-*/
-function breakTextIntoLines(text, maxSizePerLine) {
-  var truncetedText = "";
-  if (text.length < maxSizePerLine) {
-    return text;
-  }
-  else {
-    var index;
-    for (index = maxSizePerLine; index < text.length; index+=maxSizePerLine) {
-      var line = text.substring(index - maxSizePerLine, index);
-      truncetedText+= line + "<br>";
-    }
-    truncetedText+= text.substring(index - maxSizePerLine, text.length);
-  }
-  return truncetedText;
 }
