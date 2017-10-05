@@ -54,3 +54,4 @@ https://developer.sony.com/downloads/all/sony-camera-remote-api-beta-sdk/
 
 * [Materialize](http://materializecss.com/) - The design language used
 * [JQuery](https://jquery.com/) - Javascript library
+* [JSDoc](http://usejsdoc.org/index.html) - API documentation generator for Javascript
