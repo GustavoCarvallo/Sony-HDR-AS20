@@ -177,7 +177,7 @@ function methodSelectChange() {
 * when trying to display large string without spaces into a paragraph tag.
 * @param {String} text - The text to break into lines.
 * @param {String} maxSizePerLine - Maximum of chars per line.
-* @returns {String} An String with line breaks tags (<br>).
+* @returns {String} An String with line breaks tags (br tag).
 * @example <caption>Example usage of breakTextIntoLines method.</caption>
 * //  returns "[["getMethodTypes","getAvailableApiList" <br> ,"setShootMode","getShootMode","getSuppo <br> rte"]]"
 * breakTextIntoLines("[["getMethodTypes","getAvailableApiList","setShootMode","getShootMode","getSupporte"]]", 40);
