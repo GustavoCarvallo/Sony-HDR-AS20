@@ -49,11 +49,11 @@ function getLiveview(imageTagId, liveviewUrl){
   xhr.open('GET', liveviewUrl, true);
   xhr.overrideMimeType('text\/plain; charset=x-user-defined');
   xhr.ontimeout = function (e) {
+    console.log("Reset");
     xhr.abort();
     self(imageTagId, liveviewUrl);
   };
   xhr.onreadystatechange = function() {
-    console.log("Ready state: " + xhr.readyState);
       if (xhr.readyState == 3) {
           if(xhr.response.length >= CRA_LIVEVIEW_MAX_RECEIVE_SIZE) {
               xhr.abort();
@@ -62,15 +62,15 @@ function getLiveview(imageTagId, liveviewUrl){
 
           if(xhr.response.length >= (CRA_LIVEVIEW_COMMON_HEADER_SIZE + CRA_LIVEVIEW_PLAYLOAD_HEADER_SIZE+offset)) {
               if(headerDecode == false) {
-                  var startByte = (xhr.responseText.charCodeAt(offset + 0) & 0xff);
-                  var playLoadType = xhr.responseText.charCodeAt(offset + 1) & 0xff;
-                  var sequenceNumber  = (xhr.responseText.charCodeAt(offset + 2) & 0xff) << 8;
-                      sequenceNumber += (xhr.responseText.charCodeAt(offset + 3) & 0xff);
-                  var timeStamp  = (xhr.responseText.charCodeAt(offset + 4) & 0xff) << 24;
-                      timeStamp += (xhr.responseText.charCodeAt(offset + 5) & 0xff) << 16;
-                      timeStamp += (xhr.responseText.charCodeAt(offset + 6) & 0xff) <<  8;
-                      timeStamp += (xhr.responseText.charCodeAt(offset + 7) & 0xff);
-                  var startCode = [(xhr.responseText.charCodeAt(offset + 8) & 0xff), (xhr.responseText.charCodeAt(offset + 9) & 0xff), (xhr.responseText.charCodeAt(offset + 10) & 0xff), (xhr.responseText.charCodeAt(offset + 11) & 0xff)];
+                  //var startByte = (xhr.responseText.charCodeAt(offset + 0) & 0xff);
+                  //var playLoadType = xhr.responseText.charCodeAt(offset + 1) & 0xff;
+                  //var sequenceNumber  = (xhr.responseText.charCodeAt(offset + 2) & 0xff) << 8;
+                      //sequenceNumber += (xhr.responseText.charCodeAt(offset + 3) & 0xff);
+                  // var timeStamp  = (xhr.responseText.charCodeAt(offset + 4) & 0xff) << 24;
+                  //     timeStamp += (xhr.responseText.charCodeAt(offset + 5) & 0xff) << 16;
+                  //     timeStamp += (xhr.responseText.charCodeAt(offset + 6) & 0xff) <<  8;
+                  //     timeStamp += (xhr.responseText.charCodeAt(offset + 7) & 0xff);
+                  //var startCode = [(xhr.responseText.charCodeAt(offset + 8) & 0xff), (xhr.responseText.charCodeAt(offset + 9) & 0xff), (xhr.responseText.charCodeAt(offset + 10) & 0xff), (xhr.responseText.charCodeAt(offset + 11) & 0xff)];
                   var jpegSize  = ((xhr.responseText.charCodeAt(offset + 12) & 0xff) * (256 * 256));
                       jpegSize += ((xhr.responseText.charCodeAt(offset + 13) & 0xff) * 256);
                       jpegSize += ((xhr.responseText.charCodeAt(offset + 14) & 0xff));
