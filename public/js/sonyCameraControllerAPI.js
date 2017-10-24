@@ -1,4 +1,5 @@
 var xhr = new XMLHttpRequest();
+var lastTimeImageReceived;
 
 //Liveview encoding useful vars.
 var CRA_LIVEVIEW_MAX_RECEIVE_SIZE = 500000;
@@ -48,6 +49,11 @@ function getLiveview(imageTagId, liveviewUrl){
   xhr.open('GET', liveviewUrl, true);
   xhr.overrideMimeType('text\/plain; charset=x-user-defined');
   xhr.onreadystatechange = function() {
+    console.log("Ready state: " + xhr.readyState);
+      if(xhr.readyState == 4){
+        xhr.abort();
+        self(imageTagId, liveviewUrl);
+      }
       if (xhr.readyState == 3) {
           if(xhr.response.length >= CRA_LIVEVIEW_MAX_RECEIVE_SIZE) {
               xhr.abort();
