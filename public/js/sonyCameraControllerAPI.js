@@ -48,12 +48,12 @@ function getLiveview(imageTagId, liveviewUrl){
   xhr = createCORSRequest('GET', liveviewUrl);
   xhr.open('GET', liveviewUrl, true);
   xhr.overrideMimeType('text\/plain; charset=x-user-defined');
+  xhr.ontimeout = function (e) {
+    xhr.abort();
+    self(imageTagId, liveviewUrl);
+  };
   xhr.onreadystatechange = function() {
     console.log("Ready state: " + xhr.readyState);
-      if(xhr.readyState == 4){
-        xhr.abort();
-        self(imageTagId, liveviewUrl);
-      }
       if (xhr.readyState == 3) {
           if(xhr.response.length >= CRA_LIVEVIEW_MAX_RECEIVE_SIZE) {
               xhr.abort();
