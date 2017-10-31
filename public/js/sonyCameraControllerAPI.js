@@ -48,6 +48,7 @@ function getLiveview(imageTagId, liveviewUrl){
   xhr = createCORSRequest('GET', liveviewUrl);
   xhr.open('GET', liveviewUrl, true);
   xhr.overrideMimeType('text\/plain; charset=x-user-defined');
+  xhr.timeout = 500;
   xhr.ontimeout = function (e) {
     console.log("Reset");
     xhr.abort();

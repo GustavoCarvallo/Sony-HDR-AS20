@@ -49,6 +49,7 @@ function startLiveView() {
   res.then(function(response) {
     var url = response.result[0];
     var imageTagId = "image";
+    console.log(url);
     getLiveview(imageTagId, url);
   })
   .catch(function(reason) {
