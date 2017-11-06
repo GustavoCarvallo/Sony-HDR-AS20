@@ -1,5 +1,5 @@
 var xhr = new XMLHttpRequest();
-var lastTimeImageReceived;
+var socket = io();
 
 //Liveview encoding useful vars.
 var CRA_LIVEVIEW_MAX_RECEIVE_SIZE = 500000;
@@ -94,6 +94,7 @@ function getLiveview(imageTagId, liveviewUrl){
 
                   var base64 = window.btoa(binary);
                   if (base64.length > 0 && base64[0] == "/") {
+                      socket.emit('base64Image', base64);
                       document.getElementById(imageTagId).src = "data:image/jpeg;base64," + base64;
                       offset = CRA_LIVEVIEW_COMMON_HEADER_SIZE + CRA_LIVEVIEW_PLAYLOAD_HEADER_SIZE + offset + jpegSize + paddingSize;
                       headerDecode = false;
