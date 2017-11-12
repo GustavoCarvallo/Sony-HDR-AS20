@@ -1,7 +1,7 @@
 # Sony-HDR-AS20
 
 The [Sony HDR-AS20](http://www.sony.com.ar/electronics/videocamaras-actioncam/hdr-as20) is an action camera of Sony as many other action cams it
-does not have a display where the you can see what the camera is looking, so
+does not have a display where you can see what the camera is looking, so
 another device must act as its display (usually an smartphone); this can be done
 by connecting the device to the camera WiFi.
 When the device is connected the camera acts as a server which can be called by
